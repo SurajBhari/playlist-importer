@@ -34,7 +34,7 @@ def submit():
     playlist = get_playlist_tracks(playlist_id)
     p = spotify.playlist(playlist_id)
     description = p['description']
-    owner = p['owner']
+    owner = p['owner']['display_name']
     name = p['name']
     tracks = []
     for track in playlist:
