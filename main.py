@@ -24,9 +24,6 @@ def submit():
     playlist_id = url.split('/')[-1].split('?')[0]
     #https://open.spotify.com/playlist/54ZA9LXFvvFujmOVWXpHga
     playlist = spotify.playlist(playlist_id, additional_types=('track', ))
-
-    with open("test.json", "w+") as f:
-        json.dump(playlist, f, indent=4)
     tracks = []
     for track in playlist['tracks']['items']:
         track_name = track['track']['name']
