@@ -15,6 +15,14 @@ app = Flask(__name__)
 def home():
     return render_template('home.html')
 
+def get_playlist_tracks(playlist_id):
+    results = spotify.playlist_tracks(playlist_id)
+    tracks = results['items']
+    while results['next']:
+        results = spotify.next(results)
+        tracks.extend(results['items'])
+    return [track['track'] for track in tracks]
+
 @app.route("/submit")
 def submit():
     # get the data from the form
@@ -23,20 +31,24 @@ def submit():
         return render_template('home.html')
     playlist_id = url.split('/')[-1].split('?')[0]
     #https://open.spotify.com/playlist/54ZA9LXFvvFujmOVWXpHga
-    playlist = spotify.playlist(playlist_id, additional_types=('track', ))
+    playlist = get_playlist_tracks(playlist_id)
+    p = spotify.playlist(playlist_id)
+    description = p['description']
+    owner = p['owner']
+    name = p['name']
     tracks = []
-    for track in playlist['tracks']['items']:
-        track_name = track['track']['name']
-        track_artist = track['track']['artists'][0]['name']
-        year = track['track']['album']['release_date'].split('-')[0]
+    for track in playlist:
+        track_name = track['name']
+        track_artist = track['artists'][0]['name']
+        year = track['album']['release_date'].split('-')[0]
         tracks.append({
             'name': track_name,
             'artist': track_artist,
             'year': year
         })
-
-    yt_playlist = yt.create_playlist(playlist['name'], description=playlist['description'])
-    print(yt_playlist)
+    yt_playlist = yt.create_playlist(name, description=description)
+    link = f"https://music.youtube.com/playlist?list={yt_playlist}"
+    print(link)
     count = 0
     total = len(tracks)
     for track in tracks:
@@ -49,12 +61,11 @@ def submit():
             continue
         count += 1
         print(f"{count}/{total} songs added")
-    description = f'Created by {playlist["owner"]["display_name"]} on Spotify. Link to original playlist: {url} . Added {count} out of {total} songs. ... {playlist["description"]}'
+    description = f'Created by {owner} on Spotify. Link to original playlist: {url} . Added {count} out of {total} songs. ... {description}'
     yt.edit_playlist(
         yt_playlist, 
         privacyStatus='PUBLIC', 
         description=description)
-    link = f"https://music.youtube.com/playlist?list={yt_playlist}"
     return redirect(link, code=302)
 
 if __name__ == '__main__':
