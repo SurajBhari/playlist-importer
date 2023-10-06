@@ -14,15 +14,26 @@
 <body>
     <!-- align vertically and horizontally-->
     <div class='container-fluid d-flex flex-column justify-content-center align-items-center'>
-        <h1>Playlist Importer</h1>
-        <!-- take one spotify url as input -->
-        <form action='submit' class='form-inline'>
-            <center>
-            <div class='form-group'>
-                <label for='spotify-url'>Spotify URL</label>
-                <input type='text' class='form-control' id='spotify-url' name='spotify-url' placeholder='Enter Spotify URL'>
+                <h1><i class="fab fa-spotify"></i> -> <i class="fab fa-youtube"> </i></h1>
+                <!-- take one spotify url as input -->
+                <form action='styt' class='form-inline'>
+                    <center>
+                    <div class='form-group'>
+                        <label for='spotify-url'> URL</label>
+                        <input type='text' class='form-control' id='spotify-url' name='spotify-url' placeholder='Enter Spotify URL'>
+                    </div>
+                     <button type='submit' class='btn btn-primary'>Submit</button> </center>
+                </form>
+                <h1><i class="fab fa-youtube"></i> -> <i class="fab fa-spotify"></i></h1>
+                <!-- take one spotify url as input -->
+                <form action='ytts' class='form-inline'>
+                    <center>
+                    <div class='form-group'>
+                        <label for='yt-url'>URL</label>
+                        <input type='text' class='form-control' id='yt-url' name='yt-url' placeholder='Enter Youtube Music URL'>
+                    </div>
+                     <button type='submit' class='btn btn-primary'>Submit</button> </center>
+                </form>
+                
             </div>
-             <button type='submit' class='btn btn-primary'>Submit</button> </center>
-        </form>
-    </div>
-<body>
+        <body>
