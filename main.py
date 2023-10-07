@@ -7,11 +7,21 @@ from ytmusicapi import YTMusic
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyOAuth
 
-spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(client_id=config.app_id, client_secret=config.app_secret))
+redirect_uri = 'http://localhost:5000/callback'
+spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(
+    client_id=config.app_id, 
+    client_secret=config.app_secret, 
+    redirect_uri=redirect_uri, 
+    scope='playlist-modify-public, playlist-modify-private'
+    ))
+user_id = spotify.me()['id']
+
 yt = YTMusic('oauth.json')
 app = Flask(__name__)
 
+empty = "<script>document.body.innerHTML = '';</script>"
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -63,7 +73,7 @@ def styt():
                 except KeyError:
                     continue
                 count += 1
-                print(f"{count}/{total} songs added")
+                yield empty
                 yield f"{count}/{total} songs added </br>"
             description = f'Created by {owner} on Spotify. Link to original playlist: {url} . Added {count} out of {total} songs. ... {description}'
             yt.edit_playlist(
@@ -120,11 +130,13 @@ def ytts():
                 except KeyError:
                     continue
                 count += 1
-                print(f"{count}/{total} songs added")
+                yield empty
                 yield f"{count}/{total} songs added </br>"
             print('done')
             yield "<script>document.body.innerHTML = 'REDIRECTING';</script>"
-            yield f"<script>window.location = 'https://open.spotify.com/playlist/{playlist}';</script>"
+            playlist_link = f"https://open.spotify.com/playlist/{playlist['id']}"
+
+            yield f"<script>window.location = '{playlist_link}';</script>"
         except GeneratorExit:
             print('closed')
             spotify.user_playlist_unfollow(config.user_id, playlist['id'])
