@@ -102,8 +102,6 @@ def ytts():
                 return render_template('home.html')
             playlist_id = url.split("?list=")[-1]
             playlist = yt.get_playlist(playlist_id)
-            with open('playlist.json', 'w') as f:
-                json.dump(playlist, f, indent=4)
             tracks = []
             name = playlist['title']
             description = playlist['description'] if playlist['description'] else ''
@@ -144,4 +142,4 @@ def ytts():
     return Response(stream_with_context(gen()))
         
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=666)
