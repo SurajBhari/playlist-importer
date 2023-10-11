@@ -85,7 +85,7 @@ def styt():
             yield "done"
             yield "<script>document.body.innerHTML = 'REDIRECTING';</script>"
             yield f"<script>window.location = '{link}';</script>"
-        except GeneratorExit:
+        except Exception as e:
             print('closed')
             yt.delete_playlist(yt_playlist)
 
@@ -135,7 +135,7 @@ def ytts():
             playlist_link = f"https://open.spotify.com/playlist/{playlist['id']}"
 
             yield f"<script>window.location = '{playlist_link}';</script>"
-        except GeneratorExit:
+        except Exception as e:
             print('closed')
             spotify.user_playlist_unfollow(config.user_id, playlist['id'])
 
