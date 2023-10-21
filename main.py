@@ -151,9 +151,6 @@ def ytts():
         
         if playlist_id in all_playlist['spotify']:
             spotify_playlist = spotify.playlist(all_playlist['spotify'][playlist_id])
-            # clear the playlist 
-            with open("x.json", "w+") as f:
-                f.write(json.dumps(spotify_playlist, indent=4))
             spotify.user_playlist_remove_all_occurrences_of_tracks(
                 user_id, 
                 spotify_playlist['id'], 
