@@ -36,34 +36,34 @@ def get_playlist_tracks(playlist_id):
 
 @app.route("/styt")
 def styt():
+    # get the data from the form
+    url = request.args.get('spotify-url', None)
+    if not url:
+        return render_template('home.html')
+    playlist_id = url.split('/')[-1].split('?')[0]
+    #https://open.spotify.com/playlist/54ZA9LXFvvFujmOVWXpHga
+    playlist = get_playlist_tracks(playlist_id)
+    p = spotify.playlist(playlist_id)
+    description = p['description']
+    owner = p['owner']['display_name']
+    name = p['name']
+    tracks = []
+    for track in playlist:
+        track_name = track['name']
+        track_artist = track['artists'][0]['name']
+        year = track['album']['release_date'].split('-')[0]
+        tracks.append({
+            'name': track_name,
+            'artist': track_artist,
+            'year': year
+        })
+    yt_playlist = yt.create_playlist(name, description=description)
+    link = f"https://music.youtube.com/playlist?list={yt_playlist}"
+    print(link)
+    total = len(tracks)
     def gen():
         try:
-            # get the data from the form
-            url = request.args.get('spotify-url', None)
-            if not url:
-                return render_template('home.html')
-            playlist_id = url.split('/')[-1].split('?')[0]
-            #https://open.spotify.com/playlist/54ZA9LXFvvFujmOVWXpHga
-            playlist = get_playlist_tracks(playlist_id)
-            p = spotify.playlist(playlist_id)
-            description = p['description']
-            owner = p['owner']['display_name']
-            name = p['name']
-            tracks = []
-            for track in playlist:
-                track_name = track['name']
-                track_artist = track['artists'][0]['name']
-                year = track['album']['release_date'].split('-')[0]
-                tracks.append({
-                    'name': track_name,
-                    'artist': track_artist,
-                    'year': year
-                })
-            yt_playlist = yt.create_playlist(name, description=description)
-            link = f"https://music.youtube.com/playlist?list={yt_playlist}"
-            print(link)
             count = 0
-            total = len(tracks)
             for track in tracks:
                 search = yt.search(f'{track["name"]} {track["artist"]} {track["year"]}')
                 if not search:
@@ -94,31 +94,31 @@ def styt():
 
 @app.route("/ytts")
 def ytts():
+    url = request.args.get('yt-url', None)
+    if not url:
+        return render_template('home.html')
+    playlist_id = url.split("?list=")[-1]
+    playlist = yt.get_playlist(playlist_id)
+    tracks = []
+    name = playlist['title']
+    description = playlist['description'] if playlist['description'] else ''
+    for track in playlist["tracks"]:
+        track_name = track['title']
+        track_artist = track['artists'][0]['name']
+        tracks.append({
+            'name': track_name,
+            'artist': track_artist,
+        })
+    playlist = spotify.user_playlist_create(
+        user=user_id,
+        name=playlist['title'], 
+        description=description,
+        public=True)
+    total = len(tracks)
     def gen():
-        try:
-            # get the data from the form
-            url = request.args.get('yt-url', None)
-            if not url:
-                return render_template('home.html')
-            playlist_id = url.split("?list=")[-1]
-            playlist = yt.get_playlist(playlist_id)
-            tracks = []
-            name = playlist['title']
-            description = playlist['description'] if playlist['description'] else ''
-            for track in playlist["tracks"]:
-                track_name = track['title']
-                track_artist = track['artists'][0]['name']
-                tracks.append({
-                    'name': track_name,
-                    'artist': track_artist,
-                })
-            playlist = spotify.user_playlist_create(
-                user=user_id,
-                name=playlist['title'], 
-                description=description,
-                public=True)
+        try:   
             count = 0
-            total = len(tracks)
+         
             for track in tracks:
                 search = spotify.search(f'{track["name"]} {track["artist"]}', limit=1)
                 if not search:
