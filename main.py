@@ -75,7 +75,6 @@ def styt():
         if playlist_id in all_playlist['yt']:
             yt_playlist =yt.get_playlist(all_playlist['yt'][playlist_id])
             if yt_playlist['tracks']:
-                print(yt_playlist['tracks'])
                 yt.remove_playlist_items(yt_playlist['id'], yt_playlist['tracks'])
         else:
             yt_playlist = yt.create_playlist(title=spotify_name, description=spotify_description)
@@ -135,40 +134,48 @@ def ytts():
         if not url:
             return render_template('home.html')
         playlist_id = url.split("?list=")[-1]
-        playlist = yt.get_playlist(playlist_id)
-        tracks = []
-        name = playlist['title']
-        description = playlist['description'] if playlist['description'] else ''
-        for track in playlist["tracks"]:
+        yt_playlist = yt.get_playlist(playlist_id)
+        yt_playlist_id = yt_playlist['id']
+        name = yt_playlist['title']
+        description = yt_playlist['description'] if yt_playlist['description'] else ''
+        to_add_tracks = []
+        for track in yt_playlist["tracks"]:
             track_name = track['title']
             track_artist = track['artists'][0]['name']
-            tracks.append({
+            to_add_tracks.append({
                 'name': track_name,
                 'artist': track_artist,
             })
-        if playlist_id in playlist['spotify']:
-            playlist = spotify.playlist(playlist['spotify'][playlist_id])
+        
+        if playlist_id in all_playlist['spotify']:
+            spotify_playlist = spotify.playlist(all_playlist['spotify'][playlist_id])
             # clear the playlist 
+            pp(spotify_playlist['tracks']['items'][0])
+            with open("x.json", "w+") as f:
+                f.write(json.dumps(spotify_playlist, indent=4))
             spotify.user_playlist_remove_all_occurrences_of_tracks(
                 user_id, 
-                playlist['id'], 
-                [track['uri'] for track in playlist['tracks']['items']])
+                spotify_playlist['id'], 
+                [track['track']['uri'] for track in spotify_playlist['tracks']['items']]
+            )
         else:
-            playlist = spotify.user_playlist_create(
+            spotify_playlist = spotify.user_playlist_create(
                 user=user_id,
-                name=playlist['title'], 
+                name=name, 
                 description=description,
                 public=True)
-        total = len(tracks)
+        total = len(to_add_tracks)
         try:   
             count = 0
-         
-            for track in tracks:
+            for track in to_add_tracks:
                 search = spotify.search(f'{track["name"]} {track["artist"]}', limit=1)
                 if not search:
                     continue
                 try:
-                    spotify.playlist_add_items(playlist['id'], [search['tracks']['items'][0]['uri']])
+                    spotify.playlist_add_items(
+                        spotify_playlist['id'],
+                        [search['tracks']['items'][0]['uri']]
+                    )
                 except KeyError:
                     continue
                 count += 1
@@ -176,14 +183,13 @@ def ytts():
                 yield f"{count}/{total} songs added </br>"
             print('done')
             yield "<script>document.body.innerHTML = 'REDIRECTING';</script>"
-            playlist_link = f"https://open.spotify.com/playlist/{playlist['id']}"
+            playlist_link = f"https://open.spotify.com/playlist/{spotify_playlist['id']}"
             yield f"<script>window.location = '{playlist_link}';</script>"
-            all_playlist['spotify'][playlist_id] = playlist['id']
+            all_playlist['spotify'][playlist_id] = spotify_playlist['id']
             with open("playlist.json", "w") as f:
                 f.write(json.dumps(all_playlist, indent=4))
         except Exception as e:
             print('closed')
-            spotify.user_playlist_unfollow(config.user_id, playlist['id'])
 
     return Response(stream_with_context(gen()))
         
