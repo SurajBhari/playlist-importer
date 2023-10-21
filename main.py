@@ -94,17 +94,19 @@ def styt():
         total = len(to_add_tracks)
         try:
             count = 0
+            track_ids_to_add = []
             for track in to_add_tracks:
                 search = yt.search(f'{track["name"]} {track["artist"]} {track["year"]}')
                 if not search:
                     continue
                 try:
-                    yt.add_playlist_items(yt_playlist['id'], [search[0]['videoId']])
+                    track_ids_to_add.append(search[0]['videoId'])
                 except KeyError:
                     continue
                 count += 1
                 yield empty
                 yield f"{count}/{total} songs added </br>"
+            yt.add_playlist_items(yt_playlist['id'], track_ids_to_add)
             description = f'Created by {spotify_owner} on Spotify. Link to original playlist: {url} . Added {count} out of {total} songs. ... {spotify_description}'
             yt.edit_playlist(
                 yt_playlist['id'], 
@@ -150,7 +152,6 @@ def ytts():
         if playlist_id in all_playlist['spotify']:
             spotify_playlist = spotify.playlist(all_playlist['spotify'][playlist_id])
             # clear the playlist 
-            pp(spotify_playlist['tracks']['items'][0])
             with open("x.json", "w+") as f:
                 f.write(json.dumps(spotify_playlist, indent=4))
             spotify.user_playlist_remove_all_occurrences_of_tracks(
@@ -165,6 +166,7 @@ def ytts():
                 description=description,
                 public=True)
         total = len(to_add_tracks)
+        track_ids_to_add = []
         try:   
             count = 0
             for track in to_add_tracks:
@@ -172,15 +174,14 @@ def ytts():
                 if not search:
                     continue
                 try:
-                    spotify.playlist_add_items(
-                        spotify_playlist['id'],
-                        [search['tracks']['items'][0]['uri']]
-                    )
+                    track_ids_to_add.append(search['tracks']['items'][0]['uri'])
+
                 except KeyError:
                     continue
                 count += 1
                 yield empty
                 yield f"{count}/{total} songs added </br>"
+            spotify.user_playlist_add_tracks(user_id, spotify_playlist['id'], track_ids_to_add)
             print('done')
             yield "<script>document.body.innerHTML = 'REDIRECTING';</script>"
             playlist_link = f"https://open.spotify.com/playlist/{spotify_playlist['id']}"
