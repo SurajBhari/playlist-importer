@@ -89,7 +89,11 @@ def styt():
                 'year': year
             })
         
-        link = f"https://music.youtube.com/playlist?list={yt_playlist['id']}"
+        if isinstance(yt_playlist, str):
+            id = yt_playlist
+        else:
+            id = yt_playlist['id']
+        link = f"https://music.youtube.com/playlist?list={id}"
         print(link)
         total = len(to_add_tracks)
         try:
@@ -106,10 +110,10 @@ def styt():
                 count += 1
                 yield empty
                 yield f"{count}/{total} songs added </br>"
-            yt.add_playlist_items(yt_playlist['id'], track_ids_to_add)
+            yt.add_playlist_items(id, track_ids_to_add)
             description = f'Created by {spotify_owner} on Spotify. Link to original playlist: {url} . Added {count} out of {total} songs. ... {spotify_description}'
             yt.edit_playlist(
-                yt_playlist['id'], 
+                id, 
                 privacyStatus='PUBLIC', 
                 description=description
             )
@@ -118,7 +122,7 @@ def styt():
             yield "done"
             yield "<script>document.body.innerHTML = 'REDIRECTING';</script>"
             yield f"<script>window.location = '{link}';</script>"
-            all_playlist['yt'][playlist_id] = yt_playlist['id']
+            all_playlist['yt'][playlist_id] = id
             with open("playlist.json", "w") as f:
                 f.write(json.dumps(all_playlist, indent=4))
         except Exception as e:
