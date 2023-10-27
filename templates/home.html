@@ -12,95 +12,37 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
-        /* Adjust the width of the left and right sides */
-        .left-side, .right-side {
-            width: 50%;
-            padding: 20px;
-            text-align: center;
-            margin-top: 175px;
-        }
-
-        /* Style the glowing name */
-        .glowing-name {
-            margin-top: 55px;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 36px;
-            color: gold;
-            text-transform: uppercase;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.5);
-            animation: glowing-animation 2s infinite;
-        }
-
-        @keyframes glowing-animation {
-            10% {
-                text-shadow: 0 0 10px red, 0 0 20px green, 0 0 30px blue;
-            }
-            40% {
-                text-shadow: 0 0 20px chocolate, 0 0 40px rebeccapurple, 0 0 60px rgba(255, 255, 255, 0.8);
-            }
-            80% {
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.5);
-            }
-        }
-
-        /* Style the form boxes */
-        .form-box {
-            background-color: #fff;
-            padding: 20px;
-            margin: 10px;
-            border: 1px solid #ccc;
+        /* Glowing border animation for input fields */
+        input[type="text"] {
+            border: 2px solid transparent;
             border-radius: 5px;
+            transition: border 0.3s;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            animation: form-box-animation 1s ease-in-out;
         }
 
-        @keyframes form-box-animation {
+        input[type="text"]:focus {
+            border: 2px solid #00ccff; /* Change the color to the desired glowing color */
+        }
+
+        /* Glowing running animation for form boxes */
+        .form-box {
+            animation: glow 2s alternate infinite;
+        }
+
+        @keyframes glow {
             0% {
-                transform: scale(0.9);
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             }
             100% {
-                transform: scale(1);
+                box-shadow: 0 0 20px #00ccff;
             }
-        }
-
-        /* Additional styles for the form inside the boxes */
-        .form-box form {
-            text-align: center;
-        }
-
-        /* Additional styles for form elements inside the boxes */
-        .form-box .form-group {
-            margin-bottom: 10px;
-        }
-
-        /* Media query for responsiveness */
-        @media (max-width: 768px) {
-            .container-fluid {
-                flex-direction: column;
-                text-align: center;
-            }
-            .left-side, .right-side {
-                width: 100%;
-            }
-        }
-
-        /* Style the footer */
-        .footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px;
         }
     </style>
 
     <title>Playlist Importer</title>
 </head>
 
-<body>
+<body style="background-color:whitesmoke;"> <!-- Set the background color to dark blue (#00008B) -->
     <div class="glowing-name">
         Playlist Importer
     </div>
@@ -112,7 +54,7 @@
                 <form action="styt" class="form-inline">
                     <center>
                         <div class="form-group">
-                            <label for="spotify-url"> URL</label>
+                            <label for "spotify-url"> URL </label>
                             <input type="text" class="form-control" id="spotify-url" name="spotify-url" placeholder="Enter Spotify URL">
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -126,7 +68,7 @@
                 <form action="ytts" class="form-inline">
                     <center>
                         <div class="form-group">
-                            <label for="yt-url">URL</label>
+                            <label for "yt-url">URL</label>
                             <input type="text" class="form-control" id="yt-url" name="yt-url" placeholder="Enter Youtube Music URL">
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -136,14 +78,11 @@
         </div>
     </div>
 
-    <footer>
-        <div class="container-fluid d-flex flex-row justify-content-center align-items-center">
-            <div class="footer-text">
-                <p>Created by <a href=https://surajbhari.info>Suraj Bhari</a></p>
-            </div>
-            <!-- Footer section -->
-        </div>
+    <!-- Footer Section -->
+    <footer style="background: black; color: white; text-align: center; margin-top:342px;padding: 10px;">
+        Made by <a href="https://github.com/SurajBhari/playlist-importer.git" style="color: white;">Suraj Bhari</a>
     </footer>
 </body>
 
 </html>
+
