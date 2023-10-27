@@ -12,6 +12,141 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
+        /* Adjust the width of the left and right sides */
+        .left-side, .right-side {
+            width: 50%;
+            padding: 20px;
+            text-align: center;
+            margin-top: 175px;
+        }
+
+        /* Style the glowing name */
+        .glowing-name {
+            margin-top: 55px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 36px;
+            color: gold;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.5);
+            animation: glowing-animation 2s infinite;
+        }
+
+        @keyframes glowing-animation {
+            10% {
+                text-shadow: 0 0 10px red, 0 0 20px green, 0 0 30px blue;
+            }
+            40% {
+                text-shadow: 0 0 20px chocolate, 0 0 40px rebeccapurple, 0 0 60px rgba(255, 255, 255, 0.8);
+            }
+            80% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+
+        /* Your existing CSS styles ... */
+
+        /* Style the form boxes */
+        .form-box {
+            background-color: #fff;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            animation: form-box-animation 1s ease-in-out;
+        }
+
+        @keyframes form-box-animation {
+            0% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Additional styles for the form inside the boxes */
+        .form-box form {
+            text-align: center;
+        }
+
+        /* Additional styles for form elements inside the boxes */
+        .form-box .form-group {
+            margin-bottom: 10px;
+        }
+
+
+        /* Your existing CSS rules ... */
+
+        /* Style the form boxes */
+        .form-box {
+            background-color: #fff;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            animation: form-box-animation 1s ease-in-out;
+        }
+
+        @keyframes form-box-animation {
+            0% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Additional styles for the form inside the boxes */
+        .form-box form {
+            text-align: center;
+        }
+
+        /* Additional styles for form elements inside the boxes */
+        .form-box .form-group {
+            margin-bottom: 10px;
+        }
+
+        /* Media query for responsiveness */
+        @media (max-width: 768px) {
+            .container-fluid {
+                flex-direction: column;
+                text-align: center;
+            }
+            .left-side, .right-side {
+                width: 100%;
+            }
+        }
+
+
+        /* Your existing CSS rules ... */
+
+        /* Style the footer */
+        .footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Media query for responsiveness */
+        @media (max-width: 768px) {
+            .container-fluid {
+                flex-direction: column;
+                text-align: center;
+            }
+            .left-side, .right-side {
+                width: 100%;
+            }
+        }
+        q
+
         /* Glowing border animation for input fields */
         input[type="text"] {
             border: 2px solid transparent;
