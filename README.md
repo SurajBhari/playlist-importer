@@ -4,6 +4,4 @@ Introducing Playlist Importer, a straightforward and minimalist website designed
 
 ![Playlist Importer](https://github.com/SurajBhari/playlist-importer/assets/45149585/2cce5bd3-7075-4f4f-938e-0da17f3d4de6)
 
-Give it a try [here](http://surajbhari.info:666) and experience the convenience of transferring your favorite playlists seamlessly.
-
 ---
