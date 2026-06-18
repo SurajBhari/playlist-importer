@@ -1,3 +1,4 @@
 flask
 ytmusicapi
-spotipygunicorn
+spotipy
+gunicorn
