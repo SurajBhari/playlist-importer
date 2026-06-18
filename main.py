@@ -11,15 +11,23 @@ from spotipy.oauth2 import SpotifyOAuth
 
 pp = pprint.PrettyPrinter(indent=4).pprint
 redirect_uri = 'http://localhost:5000/callback'
-spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(
-    client_id=config.app_id, 
-    client_secret=config.app_secret, 
-    redirect_uri=redirect_uri, 
-    scope='playlist-modify-public, playlist-modify-private'
-    ))
-user_id = spotify.me()['id']
-
-yt = YTMusic('oauth.json')
+# Initialise the Spotify + YouTube Music clients. These require real credentials
+# (Spotify app keys in config.py + a YT Music oauth.json). When they're absent the
+# app still boots so the UI loads; the actual transfer routes need config to work.
+try:
+    spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(
+        client_id=config.app_id,
+        client_secret=config.app_secret,
+        redirect_uri=redirect_uri,
+        scope='playlist-modify-public, playlist-modify-private'
+        ))
+    user_id = spotify.me()['id']
+    yt = YTMusic('oauth.json')
+except Exception as e:
+    print(f"[playlist-importer] running unconfigured (set Spotify creds + oauth.json): {e}")
+    spotify = None
+    user_id = None
+    yt = None
 app = Flask(__name__)
 
 empty = "<script>document.body.innerHTML = '';</script>"
